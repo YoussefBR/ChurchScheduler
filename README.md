@@ -31,3 +31,4 @@ docker exec -it my_postgres_db psql -U shareduser -d cap_db
 
 When done, you can stop the container with:
 docker-compose down
+`npm install` to download the dependancies (should create a dir called 'node_modules')

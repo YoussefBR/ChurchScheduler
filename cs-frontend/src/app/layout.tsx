@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from '../theme';
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,6 +22,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <CssBaseline />  {/* Apply a consistent baseline for all components */}
           {children}
         </ThemeProvider>
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body>
+        {children}
       </body>
     </html>
   );
