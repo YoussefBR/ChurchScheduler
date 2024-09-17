@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/youssefbr/Desktop/ChurchScheduler/CSBackend/CSBackend.csproj": {}
+    "/Users/nardineshak/Documents/CAP Capstone Project/ChurchScheduler/CSBackend/CSBackend.csproj": {}
   },
   "projects": {
-    "/Users/youssefbr/Desktop/ChurchScheduler/CSBackend/CSBackend.csproj": {
+    "/Users/nardineshak/Documents/CAP Capstone Project/ChurchScheduler/CSBackend/CSBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/youssefbr/Desktop/ChurchScheduler/CSBackend/CSBackend.csproj",
+        "projectUniqueName": "/Users/nardineshak/Documents/CAP Capstone Project/ChurchScheduler/CSBackend/CSBackend.csproj",
         "projectName": "CSBackend",
-        "projectPath": "/Users/youssefbr/Desktop/ChurchScheduler/CSBackend/CSBackend.csproj",
-        "packagesPath": "/Users/youssefbr/.nuget/packages/",
-        "outputPath": "/Users/youssefbr/Desktop/ChurchScheduler/CSBackend/obj/",
+        "projectPath": "/Users/nardineshak/Documents/CAP Capstone Project/ChurchScheduler/CSBackend/CSBackend.csproj",
+        "packagesPath": "/Users/nardineshak/.nuget/packages/",
+        "outputPath": "/Users/nardineshak/Documents/CAP Capstone Project/ChurchScheduler/CSBackend/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/youssefbr/.nuget/NuGet/NuGet.Config"
+          "/Users/nardineshak/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -43,9 +43,23 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[8.0.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[8.0.4, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

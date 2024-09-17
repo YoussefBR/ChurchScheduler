@@ -1,0 +1,21 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:14  # Or specify the version you prefer
+    container_name: my_postgres_db
+    environment:
+      POSTGRES_USER: shareduser
+      POSTGRES_PASSWORD: sharedpass
+      POSTGRES_DB: cap_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - mynetwork
+
+volumes:
+  postgres_data:/var/lib/postgresql/data
+
+networks:
+  mynetwork:
