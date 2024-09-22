@@ -20,8 +20,8 @@ namespace CSBackend.Models
         [Required]
         public String SchedulingUserId {get; set;}
 
-        [Required]
-        public String LastName {get; set;}
+        // [Required]
+        // public String LastName {get; set;}
 
         // foreign key
         public String TimeSlotId {get; set;}

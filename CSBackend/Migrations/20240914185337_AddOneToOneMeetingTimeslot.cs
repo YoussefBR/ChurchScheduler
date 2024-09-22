@@ -32,6 +32,7 @@ namespace CSBackend.Migrations
                 {
                     TimeSlotId = table.Column<string>(type: "text", nullable: false),
                     StartTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     AbounaId = table.Column<string>(type: "text", nullable: false),
                     Available = table.Column<bool>(type: "boolean", nullable: false)
                 },
@@ -64,7 +65,7 @@ namespace CSBackend.Migrations
                     MeetingLocation = table.Column<string>(type: "text", nullable: false),
                     AbounaId = table.Column<string>(type: "text", nullable: false),
                     SchedulingUserId = table.Column<string>(type: "text", nullable: false),
-                    LastName = table.Column<string>(type: "text", nullable: false),
+                    //LastName = table.Column<string>(type: "text", nullable: false),
                     TimeSlotId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
