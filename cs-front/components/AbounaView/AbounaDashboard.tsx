@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import DashboardHeader from "./DashboardHeader";
 import UpcomingAppointments from "@/components/custom/UpcomingAppointments";
 import UpdateAvailability from "@/components/custom/UpdateAvailability";
