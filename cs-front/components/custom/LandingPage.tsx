@@ -41,7 +41,6 @@ export default function LandingPage() {
               </div>
               <div className="space-x-4">
                 <Button
-                  variant="outline"
                   className="bg-background text-black"
                   onClick={() => {
                     window.location.href = "/sign-in";
