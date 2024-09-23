@@ -1,4 +1,4 @@
-import AbounaDashboard from '@/components/AbounaView/AbounaDashboard'
+import { AbounaDashboard } from '@/components/AbounaView/AbounaDashboard'
 import React from 'react'
 
 let isAbouna = true
