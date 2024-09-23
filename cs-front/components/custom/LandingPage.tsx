@@ -41,7 +41,7 @@ export default function LandingPage() {
               </div>
               <div className="space-x-4">
                 <Button
-                  className="bg-background text-black"
+                  className="bg-background text-black hover:bg-slate-500"
                   onClick={() => {
                     window.location.href = "/sign-in";
                   }}
@@ -51,10 +51,10 @@ export default function LandingPage() {
                 <Button
                   className="bg-background text-black hover:bg-slate-500"
                   onClick={() => {
-                    window.location.href = "/sign-up";
+                    window.location.href = "/home";
                   }}
                 >
-                  Sign Up
+                  Book an Appointment
                 </Button>
               </div>
             </div>
