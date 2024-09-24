@@ -16,14 +16,15 @@ import { allMeetings } from "@/constants/meetings";
 export default function DashboardTable() {
   const [date, setDate] = React.useState<Date>(new Date());
   const [type, setType] = React.useState("all");
-  console.log(type);
+  const [meetings, setMeetings] = React.useState(allMeetings);
+
   return (
     <div>
       <main className="h-full grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
         <Tabs defaultValue="all">
-          <MeetingTableHeader setType={setType} />
+          <MeetingTableHeader setType={setType} setMeetings={setMeetings} />
           <TabsContent value={type}>
-            <CustomCardContent type={type} date={date} />
+            <CustomCardContent type={type} date={date} meetings={meetings} />
           </TabsContent>
         </Tabs>
       </main>
@@ -34,10 +35,23 @@ export default function DashboardTable() {
 type CustomCardContentProps = {
   type: string;
   date: Date;
+  meetings: {
+    id: number;
+    type: string;
+    client: string;
+    date: string;
+    time: string;
+    duration: string;
+    status: string;
+  }[];
 };
 
-const CustomCardContent = ({ type, date }: CustomCardContentProps) => {
-  const filteredMeetings = allMeetings.filter((meeting) => {
+const CustomCardContent = ({
+  type,
+  date,
+  meetings,
+}: CustomCardContentProps) => {
+  const filteredMeetings = meetings.filter((meeting) => {
     if (type === "all") {
       return true;
     }

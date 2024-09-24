@@ -14,12 +14,23 @@ import { allMeetings } from "@/constants/meetings";
 
 type MeetingTableHeaderProps = {
   setType: (type: string) => void;
+  setMeetings: (
+    meetings: {
+      id: number;
+      type: string;
+      client: string;
+      date: string;
+      time: string;
+      duration: string;
+      status: string;
+    }[]
+  ) => void;
 };
 
 export default function MeetingTableHeader({
   setType,
+  setMeetings,
 }: MeetingTableHeaderProps) {
-  const [meetings, setMeetings] = React.useState(allMeetings);
   const [date, setDate] = React.useState<Date>(new Date());
 
   const handleDateSelect = (selectedDate: Date) => {
@@ -74,18 +85,21 @@ export default function MeetingTableHeader({
               <Calendar
                 mode="single"
                 selected={date}
-                onSelect={() => handleDateSelect(date)}
+                onSelect={(e) => {
+                  console.log(e);
+                  handleDateSelect(e!);
+                }}
                 initialFocus
               />
             </PopoverContent>
           </Popover>
 
-          <Button size="sm" className="h-8 gap-1">
+          {/* <Button size="sm" className="h-8 gap-1">
             <PlusCircle className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
               New Meeting
             </span>
-          </Button>
+          </Button> */}
         </div>
       </div>
     </div>
