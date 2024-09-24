@@ -7,6 +7,7 @@ import MobileSidebar from "../custom/MobileSidebar";
 import { AbounaDropdownItems } from "@/constants/AbounaDropdownItems";
 import DashboardTable from "./DashboardTable";
 import AbounaStats from "./AbounaStats";
+import QuickSchedule from "../custom/QuickSchedule";
 
 export function AbounaDashboard() {
   return (
@@ -25,12 +26,13 @@ export function AbounaDashboard() {
           </div>
         </header>
         <div className="grid grid-cols-9 h-full w-full">
-          <div className="col-span-3">
+          <div className="col-span-3 ">
             <AbounaStats />
           </div>
 
           <div className="col-span-6">
             <DashboardTable />
+            <QuickSchedule />
           </div>
         </div>
       </div>
