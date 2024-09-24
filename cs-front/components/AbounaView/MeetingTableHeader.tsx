@@ -12,7 +12,13 @@ import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import FilterMenu from "@/components/custom/FilterMenu";
 import { allMeetings } from "@/constants/meetings";
 
-export default function MeetingTableHeader() {
+type MeetingTableHeaderProps = {
+  setType: (type: string) => void;
+};
+
+export default function MeetingTableHeader({
+  setType,
+}: MeetingTableHeaderProps) {
   const [meetings, setMeetings] = React.useState(allMeetings);
   const [date, setDate] = React.useState<Date>(new Date());
 
@@ -33,10 +39,20 @@ export default function MeetingTableHeader() {
     <div className="mb-4 mt-4">
       <div className="flex items-center">
         <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
-          <TabsTrigger value="past">Past</TabsTrigger>
-          <TabsTrigger value="canceled" className="hidden sm:flex">
+          <TabsTrigger value="all" onClick={() => setType("all")}>
+            All
+          </TabsTrigger>
+          <TabsTrigger value="upcoming" onClick={() => setType("upcoming")}>
+            Upcoming
+          </TabsTrigger>
+          <TabsTrigger value="past" onClick={() => setType("past")}>
+            Past
+          </TabsTrigger>
+          <TabsTrigger
+            value="canceled"
+            onClick={() => setType("canceled")}
+            className="hidden sm:flex"
+          >
             Canceled
           </TabsTrigger>
         </TabsList>
@@ -63,7 +79,7 @@ export default function MeetingTableHeader() {
               />
             </PopoverContent>
           </Popover>
-          <FilterMenu />
+
           <Button size="sm" className="h-8 gap-1">
             <PlusCircle className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">

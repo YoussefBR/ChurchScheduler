@@ -2,16 +2,16 @@
 export const allMeetings = [
   {
     id: 1,
-    name: "Project Kickoff",
+    type: "1-1",
     client: "Sarah Johnson",
-    date: "2024-03-15",
+    date: "2024-09-24",
     time: "10:00 AM",
     duration: "60 min",
     status: "upcoming",
   },
   {
     id: 2,
-    name: "Design Review",
+    type: "1-1",
     client: "Alex Chen",
     date: "2024-03-17",
     time: "2:00 PM",
@@ -20,7 +20,7 @@ export const allMeetings = [
   },
   {
     id: 3,
-    name: "Client Consultation",
+    type: "Phone Call",
     client: "Emily Brown",
     date: "2024-03-10",
     time: "11:30 AM",
@@ -29,7 +29,7 @@ export const allMeetings = [
   },
   {
     id: 4,
-    name: "Team Sync",
+    type: "Phone Call",
     client: "Internal Team",
     date: "2024-03-12",
     time: "3:00 PM",
@@ -38,7 +38,7 @@ export const allMeetings = [
   },
   {
     id: 5,
-    name: "Product Demo",
+    type: "1-1",
     client: "Michael Lee",
     date: "2024-03-20",
     time: "1:00 PM",
