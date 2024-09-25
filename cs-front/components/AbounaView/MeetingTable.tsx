@@ -20,13 +20,13 @@ import { MoreHorizontal } from "lucide-react";
 
 export default function MeetingTable({ meetings }: { meetings: any[] }) {
   return (
-    <div>
+    <div className="">
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">Status</TableHead>
-            <TableHead>Meeting Name</TableHead>
-            <TableHead>Client</TableHead>
+            <TableHead>Type</TableHead>
+            <TableHead>Parish Member</TableHead>
             <TableHead className="hidden md:table-cell">Date</TableHead>
             <TableHead className="hidden md:table-cell">Time</TableHead>
             <TableHead className="hidden md:table-cell">Duration</TableHead>
@@ -51,7 +51,7 @@ export default function MeetingTable({ meetings }: { meetings: any[] }) {
                   {meeting.status}
                 </Badge>
               </TableCell>
-              <TableCell className="font-medium">{meeting.name}</TableCell>
+              <TableCell className="font-medium">{meeting.type}</TableCell>
               <TableCell>{meeting.client}</TableCell>
               <TableCell className="hidden md:table-cell">
                 {meeting.date}

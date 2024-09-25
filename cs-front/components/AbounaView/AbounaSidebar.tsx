@@ -1,23 +1,13 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import {
-  CalendarIcon,
-  Home,
-  Clock,
-  LineChart,
-  Settings,
-  Users2,
-  Sun,
-  Moon,
-} from "lucide-react";
+import { CalendarIcon, Home, Clock } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 
 const SidebarItems: {
@@ -65,7 +55,14 @@ export default function AbounaSidebar() {
             </TooltipProvider>
           ))}
         </nav>
-        <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
+      </aside>
+    </div>
+  );
+}
+
+// ------------------------ Code for Sign Out & Theme Toggle ------------------------
+/*
+<nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
           <Button
             variant="ghost"
             size="icon"
@@ -90,7 +87,4 @@ export default function AbounaSidebar() {
             </Tooltip>
           </TooltipProvider>
         </nav>
-      </aside>
-    </div>
-  );
-}
+*/

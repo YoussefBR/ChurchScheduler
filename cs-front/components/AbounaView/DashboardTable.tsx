@@ -15,35 +15,86 @@ import { allMeetings } from "@/constants/meetings";
 
 export default function DashboardTable() {
   const [date, setDate] = React.useState<Date>(new Date());
+  const [type, setType] = React.useState("all");
+  const [meetings, setMeetings] = React.useState(allMeetings);
 
   return (
     <div>
-      <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+      <main className="h-full grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
         <Tabs defaultValue="all">
-          <MeetingTableHeader />
-          <TabsContent value="all">
-            <Card>
-              <CardHeader>
-                <CardTitle>Scheduled Meetings</CardTitle>
-                <CardDescription>
-                  {date
-                    ? `Meetings for ${format(date, "MMMM d, yyyy")}`
-                    : "Manage your upcoming and past meetings."}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <MeetingTable meetings={allMeetings} />
-              </CardContent>
-              <CardFooter>
-                <div className="text-xs text-muted-foreground">
-                  Showing <strong>{0}</strong> of{" "}
-                  <strong>{allMeetings.length}</strong> meetings
-                </div>
-              </CardFooter>
-            </Card>
+          <MeetingTableHeader setType={setType} setMeetings={setMeetings} />
+          <TabsContent value={type}>
+            <CustomCardContent type={type} date={date} meetings={meetings} />
           </TabsContent>
         </Tabs>
       </main>
     </div>
   );
 }
+
+type CustomCardContentProps = {
+  type: string;
+  date: Date;
+  meetings: {
+    id: number;
+    type: string;
+    client: string;
+    date: string;
+    time: string;
+    duration: string;
+    status: string;
+  }[];
+};
+
+const CustomCardContent = ({
+  type,
+  date,
+  meetings,
+}: CustomCardContentProps) => {
+  const filteredMeetings = meetings.filter((meeting) => {
+    if (type === "all") {
+      return true;
+    }
+    return meeting.status === type;
+  });
+
+  return (
+    <>
+      <Card>
+        <CardHeaderContent date={date} />
+        <CardContent>
+          <MeetingTable meetings={filteredMeetings} />
+        </CardContent>
+        <CardFooterContent />
+      </Card>
+    </>
+  );
+};
+
+const CardHeaderContent = (children: any) => {
+  return (
+    <>
+      <CardHeader>
+        <CardTitle>Scheduled Meetings</CardTitle>
+        <CardDescription>
+          {children.date
+            ? `Meetings for ${format(children.date, "MMMM d, yyyy")}`
+            : "Manage your upcoming and past meetings."}
+        </CardDescription>
+      </CardHeader>
+    </>
+  );
+};
+
+const CardFooterContent = () => {
+  return (
+    <>
+      <CardFooter>
+        <div className="text-xs text-muted-foreground">
+          Showing <strong>{0}</strong> of <strong>{allMeetings.length}</strong>{" "}
+          meetings
+        </div>
+      </CardFooter>
+    </>
+  );
+};
