@@ -1,4 +1,4 @@
-import AbounaSidebar from '@/components/AbounaView/AbounaSidebar'
+import Sidebar from '@/components/custom/Sidebar'
 import React from 'react'
 
 const isAbouna = true
@@ -10,7 +10,7 @@ export default function DashboardLayout({
 }) {
   return (
     <div>
-      {isAbouna && <AbounaSidebar />}
+      <Sidebar isAbouna={false} />
       {children}
     </div>
   )
