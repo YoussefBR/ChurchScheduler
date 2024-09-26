@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CSBackend.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(ChurchSchedulerContext))]
     [Migration("20240914185337_AddOneToOneMeetingTimeslot")]
     partial class AddOneToOneMeetingTimeslot
     {
@@ -36,6 +36,18 @@ namespace CSBackend.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<string>("Username")
+                    .IsRequired()
+                    .HasColumnType("text");
+
+                    b.Property<string>("Password")
+                    .IsRequired()
+                    .HasColumnType("text");
+
+                    b.Property<string>("PasswordSalt")
+                    .IsRequired()
+                    .HasColumnType("text");
 
                     b.Property<string>("FirstName")
                         .IsRequired()

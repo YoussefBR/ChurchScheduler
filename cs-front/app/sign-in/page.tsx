@@ -10,7 +10,7 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
 // Temp values
-let isAuthenticated = true
+let isAuthenticated = false
 
 export default function SignIn() {
   useEffect(() => {
