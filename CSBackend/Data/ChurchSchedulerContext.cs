@@ -11,7 +11,7 @@ public class ChurchSchedulerContext : DbContext
     public DbSet<Meeting> Meetings { get; set; } // Example DbSet
     //public DbSet<TimeSlot> TimeSlots { get; set; } // Example DbSet
     //public DbSet<User> Users { get; set; } // Example DbSet
-    public DbSet<AbounaMeeting> AbounaMeetings { get; set; } // Join table for Abouna and Meeting
+    //public DbSet<AbounaMeeting> AbounaMeetings { get; set; } // Join table for Abouna and Meeting
     //public DbSet<UserMeeting> UserMeetings { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -21,20 +21,33 @@ public class ChurchSchedulerContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<AbounaMeeting>()
-                .HasKey(am => new { am.AbounaId, am.MeetingId });
+        modelBuilder.Entity<Meeting>()
+            .Property(m => m.StartTime)
+            .HasColumnType("timestamp with time zone");
+        
+        modelBuilder.Entity<Meeting>()
+            .Property(m => m.EndTime)
+            .HasColumnType("timestamp with time zone");
 
-        modelBuilder.Entity<AbounaMeeting>()
-                .HasOne(am => am.Abouna)
-                .WithMany(a => a.AbounaMeetings)
-                .HasForeignKey(am => am.AbounaId);
+        // modelBuilder.Entity<Meeting>()
+        //     .Property(m => m.DayOfMeeting)
+        //     .HasColumnName("DayOfMeeting"); 
 
-        modelBuilder.Entity<AbounaMeeting>()
-            .HasOne(am => am.Meeting)
-            .WithMany(m => m.AbounaMeetings)
-            .HasForeignKey(am => am.MeetingId);
+        // modelBuilder.Entity<AbounaMeeting>()
+        //         .HasKey(am => new { am.AbounaId, am.MeetingId });
+
+        // modelBuilder.Entity<AbounaMeeting>()
+        //         .HasOne(am => am.Abouna)
+        //         .WithMany(a => a.AbounaMeetings)
+        //         .HasForeignKey(am => am.AbounaId);
+
+        // modelBuilder.Entity<AbounaMeeting>()
+        //     .HasOne(am => am.Meeting)
+        //     .WithMany(m => m.AbounaMeetings)
+        //     .HasForeignKey(am => am.MeetingId);
 
         // Many-to-many relationship between User and Meeting
         // modelBuilder.Entity<UserMeeting>()

@@ -30,6 +30,6 @@ namespace CSBackend.Models
         public String Availability {get; set;}
 
         // Navigation property for the many-to-many relationship with Meeting
-        public ICollection<AbounaMeeting> AbounaMeetings { get; set; }
+       // public ICollection<AbounaMeeting> AbounaMeetings { get; set; }
     }
 }

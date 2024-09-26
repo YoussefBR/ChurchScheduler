@@ -59,31 +59,13 @@ namespace CSBackend.Migrations
                     b.ToTable("Abounas");
                 });
 
-            modelBuilder.Entity("CSBackend.Models.AbounaMeeting", b =>
-                {
-                    b.Property<string>("AbounaId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("MeetingId")
-                        .HasColumnType("text");
-
-                    b.HasKey("AbounaId", "MeetingId");
-
-                    b.HasIndex("MeetingId");
-
-                    b.ToTable("AbounaMeetings");
-                });
-
             modelBuilder.Entity("CSBackend.Models.Meeting", b =>
                 {
-                    b.Property<string>("MeetingId")
-                        .HasColumnType("text");
+                    b.Property<Guid>("MeetingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("AbounaId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("DayOfMeeting")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -108,35 +90,6 @@ namespace CSBackend.Migrations
                     b.HasKey("MeetingId");
 
                     b.ToTable("Meetings");
-                });
-
-            modelBuilder.Entity("CSBackend.Models.AbounaMeeting", b =>
-                {
-                    b.HasOne("CSBackend.Models.Abouna", "Abouna")
-                        .WithMany("AbounaMeetings")
-                        .HasForeignKey("AbounaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CSBackend.Models.Meeting", "Meeting")
-                        .WithMany("AbounaMeetings")
-                        .HasForeignKey("MeetingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Abouna");
-
-                    b.Navigation("Meeting");
-                });
-
-            modelBuilder.Entity("CSBackend.Models.Abouna", b =>
-                {
-                    b.Navigation("AbounaMeetings");
-                });
-
-            modelBuilder.Entity("CSBackend.Models.Meeting", b =>
-                {
-                    b.Navigation("AbounaMeetings");
                 });
 #pragma warning restore 612, 618
         }
