@@ -1,15 +1,18 @@
 using CSBackend.Models;
 using Microsoft.EntityFrameworkCore;
 
-public class AppDbContext : DbContext
+public class ChurchSchedulerContext : DbContext
 {
+    public ChurchSchedulerContext(DbContextOptions<ChurchSchedulerContext> options) : base(options)
+    {
+    }
     public DbSet<Abouna> Abounas { get; set; } // Example DbSet
     //public DbSet<Attending> Attendings { get; set; } // Example DbSet
     public DbSet<Meeting> Meetings { get; set; } // Example DbSet
-    public DbSet<TimeSlot> TimeSlots { get; set; } // Example DbSet
-    public DbSet<User> Users { get; set; } // Example DbSet
+    //public DbSet<TimeSlot> TimeSlots { get; set; } // Example DbSet
+    //public DbSet<User> Users { get; set; } // Example DbSet
     public DbSet<AbounaMeeting> AbounaMeetings { get; set; } // Join table for Abouna and Meeting
-    public DbSet<UserMeeting> UserMeetings { get; set; }
+    //public DbSet<UserMeeting> UserMeetings { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -34,23 +37,23 @@ public class AppDbContext : DbContext
             .HasForeignKey(am => am.MeetingId);
 
         // Many-to-many relationship between User and Meeting
-        modelBuilder.Entity<UserMeeting>()
-            .HasKey(um => new { um.UserId, um.MeetingId }); // Composite key
+        // modelBuilder.Entity<UserMeeting>()
+        //     .HasKey(um => new { um.UserId, um.MeetingId }); // Composite key
 
-        modelBuilder.Entity<UserMeeting>()
-            .HasOne(um => um.User)
-            .WithMany(u => u.UserMeetings)
-            .HasForeignKey(um => um.UserId);
+        // modelBuilder.Entity<UserMeeting>()
+        //     .HasOne(um => um.User)
+        //     .WithMany(u => u.UserMeetings)
+        //     .HasForeignKey(um => um.UserId);
 
-        modelBuilder.Entity<UserMeeting>()
-            .HasOne(um => um.Meeting)
-            .WithMany(m => m.UserMeetings)
-            .HasForeignKey(um => um.MeetingId);
+        // modelBuilder.Entity<UserMeeting>()
+        //     .HasOne(um => um.Meeting)
+        //     .WithMany(m => m.UserMeetings)
+        //     .HasForeignKey(um => um.MeetingId);
 
         // Configure one-to-one relationship between Meeting and Timeslot
-        modelBuilder.Entity<Meeting>()
-            .HasOne(m => m.TimeSlot)  // Meeting has one Timeslot
-            .WithOne(t => t.Meeting)  // Timeslot has one Meeting
-            .HasForeignKey<Meeting>(m => m.TimeSlotId);  // Foreign key in Meeting table
+        // modelBuilder.Entity<Meeting>()
+        //     .HasOne(m => m.TimeSlot)  // Meeting has one Timeslot
+        //     .WithOne(t => t.Meeting)  // Timeslot has one Meeting
+        //     .HasForeignKey<Meeting>(m => m.TimeSlotId);  // Foreign key in Meeting table
     }
 }
