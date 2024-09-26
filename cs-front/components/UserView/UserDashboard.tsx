@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import { UserCalendar } from "./UserCalendar";
 import { Label } from "@/components/ui/label";
@@ -41,7 +40,6 @@ export const UserDashboard: React.FC = () => {
                 mode="single"
                 selected={date}
                 onSelect={(e) => {
-                  console.log(e);
                   handleDateSelect(e!);
                 }}
                 initialFocus
@@ -78,9 +76,68 @@ export default function MeetingForm({ date }: MeetingFormProps) {
   let timeslotsFat = [...amSlots, ...pmSlots];
   let timeslots = timeslotsFat.flat(1);
 
+  // Helper function to format the time and date
+  const getDateTime = (time: string) => {
+    const [timeString, period] = time.split(" ");
+    const [hours, minutes] = timeString.split(":");
+
+    let hour24 = parseInt(hours);
+    if (period === "PM" && hour24 < 12) hour24 += 12;
+
+    const newDate = new Date(date);
+    newDate.setHours(hour24, parseInt(minutes));
+    return newDate;
+  };
+
+  const submitForm = async () => {
+    const startTime = getDateTime(selectedTime!);
+    const endTime = new Date(startTime.getTime() + 30 * 60000); // Add 30 minutes to start time for end time
+
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const raw = JSON.stringify({
+      "MeetingType": meetingType,
+      "AbounaId": "1",
+      "SchedulingUserName": name,
+      "SchedulingUserEmail": email,
+      "StartTime": startTime.toISOString(),
+      "EndTime": endTime.toISOString()
+    });
+
+    console.log(raw);
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw
+      //redirect: "follow"
+    };
+
+    try {
+      const response = await fetch('http://localhost:5192/api/meetings/book', requestOptions);
+
+      if (response.ok) {
+        const bookedMeeting = await response.json();
+        console.log("Meeting created successfully", bookedMeeting);
+        window.location.href = `http://localhost:3000/meeting-booked?name=${encodeURIComponent(bookedMeeting.name)}&date=${encodeURIComponent(bookedMeeting.date)}&time=${encodeURIComponent(bookedMeeting.time)}`;
+      } else {
+        console.error("Error creating meeting:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error creating meeting:", error);
+    }
+  };
+
   return (
     <div className="relative flex-col items-start gap-8 md:flex">
-      <form className="grid w-full items-start gap-6">
+      <form
+        className="grid w-full items-start gap-6"
+        onSubmit={(e) => {
+          e.preventDefault();
+          submitForm();
+        }}
+      >
         <fieldset className="grid gap-6 rounded-lg border p-4">
           <legend className="-ml-1 px-1 text-sm font-medium">
             Scheduler Info
@@ -172,20 +229,7 @@ export default function MeetingForm({ date }: MeetingFormProps) {
           </ScrollArea>
         </fieldset>
 
-        <Button
-          type="submit"
-          className="w-full justify-center"
-          onClick={(e) => {
-            e.preventDefault();
-            console.log({
-              date: date.toDateString(),
-              time: selectedTime,
-              type: meetingType,
-              name,
-              email,
-            });
-          }}
-        >
+        <Button type="submit" className="w-full justify-center">
           Submit
         </Button>
       </form>
