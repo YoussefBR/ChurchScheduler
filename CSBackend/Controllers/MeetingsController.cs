@@ -56,5 +56,26 @@ namespace ChurchScheduler.Controllers
             return meeting;
         }
 
+        [HttpGet("abouna/{abounaId}")]
+        public async Task<ActionResult<IEnumerable<Meeting>>> GetMeetingsByAbounaId(string abounaId)
+        {
+            // Validate the abounaId
+            if (string.IsNullOrEmpty(abounaId))
+            {
+                return BadRequest("AbounaId is required.");
+            }
+
+            var meetings = await _context.Meetings
+                .Where(m => m.AbounaId.Equals(abounaId))
+                .ToListAsync();
+
+            if (meetings == null || !meetings.Any())
+            {
+                return NotFound("No meetings found for the given AbounaId.");
+            }
+
+            return Ok(meetings);
+        }
+
     }
 }
