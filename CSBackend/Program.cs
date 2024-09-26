@@ -87,12 +87,17 @@ app.Run();
 //     context.Database.Migrate();
 
 //     // Seed initial data if no Abouna exists
+
 //     if (!context.Abounas.Any(a => a.Username == "frdanialzaki"))
+
+//     if (!context.Abounas.Any(a => a.Username == "frnardineshak"))
+
 //     {
 //         logger.LogInformation("Seeding the database with initial Abouna data.");
 //         string salt = PasswordHasher.CreateSalt(); // Create salt
 //         var abouna = new Abouna
 //         {
+
 //             AbounaId = "3",
 //             FirstName = "Fr. Danial",
 //             LastName = "Zaki",
@@ -113,10 +118,36 @@ app.Run();
 //             logger.LogError(ex, "An error occurred while saving Abouna to the database.");
 //         }
 
+
+//             AbounaId = "2",
+//             FirstName = "Fr.Nardin",
+//             LastName = "Eshak",
+//             Username = "frnardineshak",
+//             Password = PasswordHasher.Hash("ilovejesus", salt), // Replace with your secure password
+//             PasswordSalt = salt,
+//             Email = "frnardin@gmail.com", // Replace with the email you want
+//             Availability = ""
+//         };
+
+//         context.Abounas.Add(abouna);
+//         try
+//         {
+//             context.SaveChanges(); // Save to the database
+//         }
+//         catch (Exception ex)
+//         {
+//             logger.LogError(ex, "An error occurred while saving Abouna to the database.");
+//         }
+
+
 //         logger.LogInformation("Abouna added to the database: {Abouna}", abouna);
 //     }
 //     else
 //     {
 //         logger.LogInformation("Abouna already exists in the database.");
 //     }
+
 // }
+
+//}
+

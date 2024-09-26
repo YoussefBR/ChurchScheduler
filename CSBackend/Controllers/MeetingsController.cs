@@ -76,6 +76,5 @@ namespace ChurchScheduler.Controllers
 
             return Ok(meetings);
         }
-
     }
 }

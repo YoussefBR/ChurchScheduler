@@ -1,9 +1,7 @@
 import { UserDashboard } from '@/components/UserView/UserDashboard'
-
 import { AbounaDashboard } from '@/components/AbounaView/AbounaDashboard'
 
-import React, { useState } from 'react'
-import { useRouter } from 'next/router';
+import React from 'react'
 
 
 export default function page() {
