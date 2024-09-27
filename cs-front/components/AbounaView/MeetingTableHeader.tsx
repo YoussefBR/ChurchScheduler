@@ -49,11 +49,6 @@ export default function MeetingTableHeader({
   return (
     <div className="mb-4 mt-4">
       <div className="flex items-center">
-        <TabsList>
-          <TabsTrigger value="all" onClick={() => setType("all")}>
-            All
-          </TabsTrigger>
-        </TabsList>
         <div className="ml-auto flex items-center gap-2">
           <Popover>
             <PopoverTrigger asChild>

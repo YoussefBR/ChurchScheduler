@@ -24,6 +24,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function QuickSchedule() {
   const [date, setDate] = useState<Date>();
+  const [selectedTime, setSelectedTime] = useState<string>("");
+  const [meetingType, setMeetingType] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
 
   const timeOptions = Array.from({ length: 24 * 4 }, (_, i) => {
     const hour = Math.floor(i / 4);
@@ -32,6 +36,63 @@ export default function QuickSchedule() {
     const formattedHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
     return `${formattedHour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} ${ampm}`;
   });
+
+  const getDateTime = (date: Date, time: string) => {
+    const [timePart, modifier] = time.split(" ");
+    let [hour, minute] = timePart.split(":").map(Number);
+    if (modifier === "PM" && hour < 12) hour += 12;
+    if (modifier === "AM" && hour === 12) hour = 0;
+
+    const combinedDate = new Date(date);
+    combinedDate.setHours(hour, minute, 0, 0); // Set hours, minutes, seconds to 0
+
+    return combinedDate;
+  };
+
+  const submitForm = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); // Prevent the default form submission behavior
+
+    const startTime = getDateTime(date!, selectedTime); // Combine date and selected time
+    const endTime = new Date(startTime.getTime() + 30 * 60000); // Add 30 minutes to start time for end time
+
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const raw = JSON.stringify({
+      MeetingType: meetingType,
+      AbounaId: "1",
+      SchedulingUserName: name,
+      SchedulingUserEmail: email,
+      StartTime: startTime.toISOString(),
+      EndTime: endTime.toISOString(),
+    });
+
+    console.log(raw);
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      //redirect: "follow"
+    };
+
+    try {
+      const response = await fetch(
+        "http://localhost:5192/api/meetings/book",
+        requestOptions
+      );
+
+      if (response.ok) {
+        const bookedMeeting = await response.json();
+        console.log("Meeting created successfully", bookedMeeting);
+        window.location.href = `http://localhost:3000/meeting-booked`;
+      } else {
+        console.error("Error creating meeting:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error creating meeting:", error);
+    }
+  };
 
   return (
     <div className="mt-6 px-6 mb-4">

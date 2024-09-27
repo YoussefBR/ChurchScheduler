@@ -107,7 +107,7 @@ export default function Component({ meetings }: { meetings: Meeting[] }) {
   ];
 
   const table = useReactTable({
-    data: meetings,
+    data: allMeetings,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -150,11 +150,11 @@ export default function Component({ meetings }: { meetings: Meeting[] }) {
       <div className="rounded-md border">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
+            {table.getHeaderGroups().map((headerGroup, i) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+                {headerGroup.headers.map((header, i) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={i}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
