@@ -13,8 +13,6 @@ import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
 import { Button } from "../ui/button";
 import useMeetingStore, { Meeting } from "@/hooks/useMeeting";
-import { allMeetings } from "@/constants/meetings";
-import { format, parse, parseISO } from "date-fns";
 
 const priestName = "Fr. Danial Zaki";
 
@@ -23,13 +21,12 @@ export const UserDashboard: React.FC = () => {
   const handleDateSelect = (selectedDate: Date) => {
     setDate(selectedDate);
   };
-  const [meetings, setMeetings] = useState<Meeting[]>([]);
-  const { fetchMeetings } = useMeetingStore();
+  // const [meetings, setMeetings] = useState<Meeting[]>([]);
+  const { fetchMeetings, meetings } = useMeetingStore();
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchMeetings();
-      setMeetings(data);
+      await fetchMeetings();
     };
 
     fetchData();

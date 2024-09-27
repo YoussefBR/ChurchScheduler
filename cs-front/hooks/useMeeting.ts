@@ -17,8 +17,7 @@ export type Meeting = {
 type MeetingStore = {
   meetings: Meeting[];
   filteredMeetings: Meeting[];
-  fetchMeetings: () => Promise<Meeting[]>;
-  filterMeetings: (type: string) => void;
+  fetchMeetings: () => Promise<void>;
 };
 
 const MeetingStoreTemplate: StateCreator<
@@ -28,20 +27,29 @@ const MeetingStoreTemplate: StateCreator<
 > = persist(
   (set) => ({
     // Initialize the store with the mock data
-    meetings: allMeetings,
-    filteredMeetings: allMeetings,
+    meetings: [],
+    filteredMeetings: [],
 
     // Fetch the meetings from the API
     fetchMeetings: async () => {
       // Simulate an API call with a delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      // Return the allMeetings object
-      return allMeetings;
-    },
 
-    // Filter the meetings based on the type
-    filterMeetings: (type: string) => {
-      // Filter the meetings based on the type
+      const requestOptions = {
+        method: "GET",
+      };
+
+      const res = await fetch(
+        "http://localhost:5192/api/meetings/abouna/1",
+        requestOptions
+      );
+
+      if (res.ok) {
+        const meetings = await res.json();
+        set({ meetings });
+      } else {
+        console.error("Error fetching meetings:", res.statusText);
+      }
+      // Return the allMeetings object
     },
   }),
   { name: "meeting-store" }
