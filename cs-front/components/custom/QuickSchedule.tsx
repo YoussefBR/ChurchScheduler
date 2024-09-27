@@ -34,26 +34,32 @@ export default function QuickSchedule() {
     const minute = (i % 4) * 15;
     const ampm = hour < 12 ? "AM" : "PM";
     const formattedHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-    return `${formattedHour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} ${ampm}`;
+    return `${formattedHour.toString().padStart(2, "0")}:${minute
+      .toString()
+      .padStart(2, "0")} ${ampm}`;
   });
 
-  const getDateTime = (date: Date, time: string) => {
-    const [timePart, modifier] = time.split(" ");
-    let [hour, minute] = timePart.split(":").map(Number);
-    if (modifier === "PM" && hour < 12) hour += 12;
-    if (modifier === "AM" && hour === 12) hour = 0;
+  // Helper function to format the time and date
+  const getDateTime = (time: string) => {
+    const [timeString, period] = time.split(" ");
+    const [hours, minutes] = timeString.split(":");
 
-    const combinedDate = new Date(date);
-    combinedDate.setHours(hour, minute, 0, 0); // Set hours, minutes, seconds to 0
+    let hour24 = parseInt(hours);
+    if (period === "PM" && hour24 < 12) hour24 += 12;
 
-    return combinedDate;
+    const newDate = new Date(date!);
+    newDate.setHours(hour24, parseInt(minutes));
+    return newDate;
   };
 
   const submitForm = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Prevent the default form submission behavior
-
-    const startTime = getDateTime(date!, selectedTime); // Combine date and selected time
+    console.log(selectedTime);
+    console.log(date);
+    const startTime = getDateTime(selectedTime); // Combine date and selected time
     const endTime = new Date(startTime.getTime() + 30 * 60000); // Add 30 minutes to start time for end time
+    console.log(startTime);
+    console.log(endTime);
 
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -73,7 +79,6 @@ export default function QuickSchedule() {
       method: "POST",
       headers: myHeaders,
       body: raw,
-      //redirect: "follow"
     };
 
     try {
@@ -85,7 +90,7 @@ export default function QuickSchedule() {
       if (response.ok) {
         const bookedMeeting = await response.json();
         console.log("Meeting created successfully", bookedMeeting);
-        window.location.href = `http://localhost:3000/meeting-booked`;
+        window.location.href = `http://localhost:3000/abouna-booked`;
       } else {
         console.error("Error creating meeting:", response.statusText);
       }
@@ -101,11 +106,11 @@ export default function QuickSchedule() {
           <CardTitle>Quick Schedule a Meeting</CardTitle>
         </CardHeader>
         <CardContent>
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={submitForm}>
             <div className="grid grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="meetingType">Meeting Type</Label>
-                <Select>
+                <Select onValueChange={setMeetingType}> {/* Update the meeting type */}
                   <SelectTrigger id="meetingType">
                     <SelectValue placeholder="Select meeting type" />
                   </SelectTrigger>
@@ -117,11 +122,21 @@ export default function QuickSchedule() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="parishMember">Parish Member</Label>
-                <Input id="parishMember" placeholder="Enter name" />
+                <Input 
+                  id="parishMember" 
+                  placeholder="Enter name" 
+                  value={name} 
+                  onChange={(e) => setName(e.target.value)} // Update the name state
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="parishMember-email">Member Email</Label>
-                <Input id="parishMember-email" placeholder="Enter Email" />
+                <Input 
+                  id="parishMember-email" 
+                  placeholder="Enter Email" 
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)} // Update the email state
+                />
               </div>
             </div>
             <div className="grid grid-cols-3 gap-4">
@@ -141,22 +156,23 @@ export default function QuickSchedule() {
                     <Calendar
                       mode="single"
                       selected={date}
-                      onSelect={setDate}
+                      onSelect={(date) => setDate(date!)}
                       initialFocus
+                      disabled={{ before: new Date() }}
                     />
                   </PopoverContent>
                 </Popover>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="time">Time</Label>
-                <Select>
+                <Select onValueChange={(v) => setSelectedTime(v!)}> {/* Update the selected time */}
                   <SelectTrigger id="time">
                     <SelectValue placeholder="Select time" />
                   </SelectTrigger>
                   <SelectContent>
                     <ScrollArea className="h-[200px]">
                       {timeOptions.map((time) => (
-                        <SelectItem key={time} value={time}>
+                        <SelectItem key={time} value={time} onClick={()=> console.log(time)}>
                           {time}
                         </SelectItem>
                       ))}

@@ -9,7 +9,7 @@ interface GenericMeetingScheduledProps {
   AbounaSchedule:boolean
 }
 
-export default function GenericMeetingScheduled({ onDismiss }: GenericMeetingScheduledProps) {
+export default function AbounaScheduled({ onDismiss }: GenericMeetingScheduledProps) {
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export default function GenericMeetingScheduled({ onDismiss }: GenericMeetingSch
 
   const handleDismiss = () => {
     // Redirect to the home page
-    window.location.href = "http://localhost:3000";
+    window.location.href = "http://localhost:3000/abouna-home";
   }
 
   return (
