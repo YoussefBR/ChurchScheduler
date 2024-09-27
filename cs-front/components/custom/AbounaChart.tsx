@@ -140,9 +140,6 @@ export function AbounaChart() {
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col text-sm">
-        <div className="flex items-center gap-2 font-medium leading-none mb-3">
-          Next meeting in ... minutes <CalendarClock className="h-4 w-4" />
-        </div>
         <div className="leading-none text-muted-foreground">
           Showing remaining meetings for today
         </div>
