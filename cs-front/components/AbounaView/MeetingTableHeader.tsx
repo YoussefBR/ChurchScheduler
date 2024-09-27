@@ -71,6 +71,7 @@ export default function MeetingTableHeader({
             <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 mode="single"
+                disabled={{ before: new Date() }}
                 selected={date}
                 onSelect={(e) => {
                   handleDateSelect(e!);
