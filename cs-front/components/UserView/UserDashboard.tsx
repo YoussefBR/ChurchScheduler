@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { UserCalendar } from "./UserCalendar";
 import { Label } from "@/components/ui/label";
 import {
@@ -12,15 +12,28 @@ import {
 import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
 import { Button } from "../ui/button";
+import useMeetingStore, { Meeting } from "@/hooks/useMeeting";
+import { allMeetings } from "@/constants/meetings";
+import { format, parse, parseISO } from "date-fns";
 
 const priestName = "Fr. Danial Zaki";
 
 export const UserDashboard: React.FC = () => {
   const [date, setDate] = React.useState<Date>(new Date());
-
   const handleDateSelect = (selectedDate: Date) => {
     setDate(selectedDate);
   };
+  const [meetings, setMeetings] = useState<Meeting[]>([]);
+  const { fetchMeetings } = useMeetingStore();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchMeetings();
+      setMeetings(data);
+    };
+
+    fetchData();
+  }, [fetchMeetings]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -48,7 +61,7 @@ export const UserDashboard: React.FC = () => {
           </div>
 
           <div className="sm:col-span-2 h-full">
-            <MeetingForm date={date} />
+            <MeetingForm date={date} meetings={meetings} />
           </div>
         </div>
       </main>
@@ -58,23 +71,50 @@ export const UserDashboard: React.FC = () => {
 
 type MeetingFormProps = {
   date: Date;
+  meetings: Meeting[];
 };
 
-export default function MeetingForm({ date }: MeetingFormProps) {
+export default function MeetingForm({ date, meetings }: MeetingFormProps) {
   const [selectedTime, setSelectedTime] = React.useState<string | null>(null);
   const [meetingType, setMeetingType] = React.useState<string | null>(null);
   const [name, setName] = React.useState<string | null>(null);
   const [email, setEmail] = React.useState<string | null>(null);
 
+  const meetingsOfDay = meetings.filter((m) => {
+    return new Date(m.startTime).toDateString() === date?.toDateString();
+  });
+
+  const bookedTimes = meetingsOfDay.map((m) => {
+    const tempDate = new Date(m.startTime);
+    console.log(tempDate);
+    console.log(m.startTime);
+    return new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    }).format(tempDate);
+  });
+
+  console.log(meetingsOfDay);
+  console.log(bookedTimes);
+
   let amSlots = Array.from({ length: 12 }, (_, i) => {
     return i > 7 ? [`${i}:00 AM`, `${i}:30 AM`] : [];
   });
   let pmSlots = Array.from({ length: 12 }, (_, i) => {
-    return i <= 10 ? [`${i}:00 PM`, `${i}:30 PM`] : [];
+    return i <= 10
+      ? i == 0
+        ? [`${12}:00 PM`, `${12}:30 PM`]
+        : [`${i}:00 PM`, `${i}:30 PM`]
+      : [];
   });
 
   let timeslotsFat = [...amSlots, ...pmSlots];
   let timeslots = timeslotsFat.flat(1);
+
+  const availableTimes = timeslots.filter(
+    (time) => !bookedTimes.includes(time)
+  );
 
   // Helper function to format the time and date
   const getDateTime = (time: string) => {
@@ -97,12 +137,12 @@ export default function MeetingForm({ date }: MeetingFormProps) {
     myHeaders.append("Content-Type", "application/json");
 
     const raw = JSON.stringify({
-      "MeetingType": meetingType,
-      "AbounaId": "1",
-      "SchedulingUserName": name,
-      "SchedulingUserEmail": email,
-      "StartTime": startTime.toISOString(),
-      "EndTime": endTime.toISOString()
+      MeetingType: meetingType,
+      AbounaId: "1",
+      SchedulingUserName: name,
+      SchedulingUserEmail: email,
+      StartTime: startTime.toISOString(),
+      EndTime: endTime.toISOString(),
     });
 
     console.log(raw);
@@ -110,12 +150,15 @@ export default function MeetingForm({ date }: MeetingFormProps) {
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
-      body: raw
+      body: raw,
       //redirect: "follow"
     };
 
     try {
-      const response = await fetch('http://localhost:5192/api/meetings/book', requestOptions);
+      const response = await fetch(
+        "http://localhost:5192/api/meetings/book",
+        requestOptions
+      );
 
       if (response.ok) {
         const bookedMeeting = await response.json();
@@ -208,11 +251,11 @@ export default function MeetingForm({ date }: MeetingFormProps) {
         </fieldset>
         <fieldset className="grid gap-6 rounded-lg border p-4">
           <legend className="-ml-1 px-1 text-sm font-medium">
-            Available Timeslots on {date.toDateString()}
+            Available Timeslots on {date?.toDateString()}
           </legend>
           <ScrollArea className="h-[340px] rounded-md ">
             <div className="p-4 space-y-2">
-              {timeslots.map((time) => (
+              {availableTimes.map((time) => (
                 <Button
                   key={time}
                   variant={selectedTime === time ? "default" : "outline"}

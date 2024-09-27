@@ -16,13 +16,13 @@ type MeetingTableHeaderProps = {
   setType: (type: string) => void;
   setMeetings: (
     meetings: {
-      id: number;
-      type: string;
-      client: string;
-      date: string;
-      time: string;
-      duration: string;
-      status: string;
+      meetingId: string;
+      meetingType: string;
+      abounaId: string;
+      schedulingUserName: string;
+      schedulingUserEmail: string;
+      startTime: string;
+      endTime: string;
     }[]
   ) => void;
 };

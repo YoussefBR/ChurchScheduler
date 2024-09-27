@@ -12,6 +12,7 @@ import MeetingTableHeader from "@/components/AbounaView/MeetingTableHeader";
 import MeetingTable from "@/components/AbounaView/MeetingTable";
 import { format } from "date-fns";
 import { allMeetings } from "@/constants/meetings";
+import { Meeting } from "@/hooks/useMeeting";
 
 export default function DashboardTable() {
   const [date, setDate] = React.useState<Date>(new Date());
@@ -35,15 +36,7 @@ export default function DashboardTable() {
 type CustomCardContentProps = {
   type: string;
   date: Date;
-  meetings: {
-    id: number;
-    type: string;
-    client: string;
-    date: string;
-    time: string;
-    duration: string;
-    status: string;
-  }[];
+  meetings: Meeting[];
 };
 
 const CustomCardContent = ({
@@ -52,10 +45,7 @@ const CustomCardContent = ({
   meetings,
 }: CustomCardContentProps) => {
   const filteredMeetings = meetings.filter((meeting) => {
-    if (type === "all") {
-      return true;
-    }
-    return meeting.status === type;
+    return true;
   });
 
   return (
