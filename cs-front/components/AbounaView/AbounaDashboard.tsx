@@ -1,15 +1,24 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Search } from "lucide-react"
 
-import { Input } from "@/components/ui/input";
-import MobileSidebar from "../custom/MobileSidebar";
-import { AbounaDropdownItems } from "@/constants/AbounaDropdownItems";
-import DashboardTable from "./DashboardTable";
-import AbounaStats from "./AbounaStats";
-import QuickSchedule from "../custom/QuickSchedule";
+import { Input } from "@/components/ui/input"
+import MobileSidebar from "../custom/MobileSidebar"
+import { AbounaDropdownItems } from "@/constants/AbounaDropdownItems"
+import DashboardTable from "./DashboardTable"
+import AbounaStats from "./AbounaStats"
+import QuickSchedule from "../custom/QuickSchedule"
+import moment from "moment"
+import { Calendar, momentLocalizer } from "react-big-calendar"
+import { generateSampleEvents, Event } from "./SampleEvents";
+import { useState } from "react";
+import { TestCalendar } from "./TestCalendar";
 
 export function AbounaDashboard() {
+
+  const [events, setEvents] = useState<Event[]>(generateSampleEvents());
+  const localizer = momentLocalizer(moment)
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-background ">
       <div className="flex h-screen flex-col  sm:gap-4 sm:py-4 sm:pl-14 ">
@@ -25,7 +34,7 @@ export function AbounaDashboard() {
             />
           </div>
         </header>
-        <div className="grid grid-cols-9 h-full w-full">
+        {/* <div className="grid grid-cols-9 h-full w-full">
           <div className="col-span-3 ">
             <AbounaStats />
           </div>
@@ -34,7 +43,15 @@ export function AbounaDashboard() {
             <DashboardTable />
             <QuickSchedule />
           </div>
-        </div>
+        </div> */}
+        {/* <Calendar 
+          localizer={localizer}
+          defaultView="month"
+          events={[]}
+          startAccessor="start"
+          endAccessor="end"
+        /> */}
+        <TestCalendar />
       </div>
     </div>
   );
