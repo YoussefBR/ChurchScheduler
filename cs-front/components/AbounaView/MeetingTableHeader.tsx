@@ -38,7 +38,7 @@ export default function MeetingTableHeader({
     if (selectedDate) {
       const formattedDate = format(selectedDate, "yyyy-MM-dd");
       const filteredMeetings = allMeetings.filter(
-        (meeting) => meeting.date === formattedDate
+        (meeting) => format(meeting.startTime, "yyyy-MM-dd") === formattedDate
       );
       setMeetings(filteredMeetings);
     } else {
@@ -52,19 +52,6 @@ export default function MeetingTableHeader({
         <TabsList>
           <TabsTrigger value="all" onClick={() => setType("all")}>
             All
-          </TabsTrigger>
-          <TabsTrigger value="upcoming" onClick={() => setType("upcoming")}>
-            Upcoming
-          </TabsTrigger>
-          <TabsTrigger value="past" onClick={() => setType("past")}>
-            Past
-          </TabsTrigger>
-          <TabsTrigger
-            value="canceled"
-            onClick={() => setType("canceled")}
-            className="hidden sm:flex"
-          >
-            Canceled
           </TabsTrigger>
         </TabsList>
         <div className="ml-auto flex items-center gap-2">
@@ -86,20 +73,12 @@ export default function MeetingTableHeader({
                 mode="single"
                 selected={date}
                 onSelect={(e) => {
-                  console.log(e);
                   handleDateSelect(e!);
                 }}
                 initialFocus
               />
             </PopoverContent>
           </Popover>
-
-          {/* <Button size="sm" className="h-8 gap-1">
-            <PlusCircle className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              New Meeting
-            </span>
-          </Button> */}
         </div>
       </div>
     </div>

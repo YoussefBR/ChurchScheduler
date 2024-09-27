@@ -24,7 +24,8 @@ const chartData = [
     type: "Calls",
     count: allMeetings.filter((m) => {
       return (
-        m.type === "Phone Call" && m.date === format(new Date(), "yyyy-MM-dd")
+        m.meetingType === "Phone Call" &&
+        format(m.startTime, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd")
       );
     }).length,
     fill: "hsl(var(--chart-1))",
@@ -32,7 +33,10 @@ const chartData = [
   {
     type: "1-1",
     count: allMeetings.filter((m) => {
-      return m.type === "1-1" && m.date === format(new Date(), "yyyy-MM-dd");
+      return (
+        m.meetingType === "In-Person" &&
+        format(m.startTime, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd")
+      );
     }).length,
     fill: "hsl(var(--chart-6))",
   },
@@ -73,7 +77,7 @@ const CustomTooltip = ({
 export function AbounaChart() {
   const formattedDate = format(new Date(), "yyyy-MM-dd");
   const meetingCount = allMeetings.filter(
-    (m) => m.date === formattedDate
+    (m) => format(m.startTime, "yyyy-MM-dd") === formattedDate
   ).length;
 
   return (

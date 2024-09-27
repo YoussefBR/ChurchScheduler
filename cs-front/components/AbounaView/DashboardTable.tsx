@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import {
   Card,
@@ -11,19 +11,30 @@ import {
 import MeetingTableHeader from "@/components/AbounaView/MeetingTableHeader";
 import MeetingTable from "@/components/AbounaView/MeetingTable";
 import { format } from "date-fns";
-import { allMeetings } from "@/constants/meetings";
-import { Meeting } from "@/hooks/useMeeting";
+
+import useMeetingStore, { Meeting } from "@/hooks/useMeeting";
 
 export default function DashboardTable() {
   const [date, setDate] = React.useState<Date>(new Date());
   const [type, setType] = React.useState("all");
-  const [meetings, setMeetings] = React.useState(allMeetings);
+
+  const { meetings, fetchMeetings } = useMeetingStore();
+  const [allMeetings, setAllMeetings] = React.useState<Meeting[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchMeetings();
+    };
+
+    fetchData();
+    setAllMeetings(meetings);
+  }, [fetchMeetings, meetings]);
 
   return (
     <div>
       <main className="h-full grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
         <Tabs defaultValue="all">
-          <MeetingTableHeader setType={setType} setMeetings={setMeetings} />
+          <MeetingTableHeader setType={setType} setMeetings={setAllMeetings} />
           <TabsContent value={type}>
             <CustomCardContent type={type} date={date} meetings={meetings} />
           </TabsContent>
@@ -55,7 +66,7 @@ const CustomCardContent = ({
         <CardContent>
           <MeetingTable meetings={filteredMeetings} />
         </CardContent>
-        <CardFooterContent />
+        <CardFooterContent length={filteredMeetings?.length} />
       </Card>
     </>
   );
@@ -76,12 +87,12 @@ const CardHeaderContent = (children: any) => {
   );
 };
 
-const CardFooterContent = () => {
+const CardFooterContent = ({ length }: { length: number }) => {
   return (
     <>
       <CardFooter>
         <div className="text-xs text-muted-foreground">
-          Showing <strong>{0}</strong> of <strong>{allMeetings.length}</strong>{" "}
+          Showing <strong>{0}</strong> of <strong>{length ? length : 0}</strong>{" "}
           meetings
         </div>
       </CardFooter>

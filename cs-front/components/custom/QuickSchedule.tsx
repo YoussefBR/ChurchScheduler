@@ -41,7 +41,7 @@ export default function QuickSchedule() {
         </CardHeader>
         <CardContent>
           <form className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="meetingType">Meeting Type</Label>
                 <Select>
@@ -57,6 +57,10 @@ export default function QuickSchedule() {
               <div className="space-y-2">
                 <Label htmlFor="parishMember">Parish Member</Label>
                 <Input id="parishMember" placeholder="Enter name" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="parishMember-email">Member Email</Label>
+                <Input id="parishMember-email" placeholder="Enter Email" />
               </div>
             </div>
             <div className="grid grid-cols-3 gap-4">

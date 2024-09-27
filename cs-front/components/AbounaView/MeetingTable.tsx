@@ -17,8 +17,24 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
+import { Meeting } from "@/hooks/useMeeting";
+import { format, parseISO } from "date-fns";
 
 export default function MeetingTable({ meetings }: { meetings: any[] }) {
+  const determineStatus = (date: Meeting) => {
+    const now = new Date();
+    const meetingStart = new Date(date.startTime);
+    const meetingEnd = new Date(date.endTime);
+
+    if (meetingStart > now) {
+      return "upcoming";
+    } else if (meetingStart < now && meetingEnd < now) {
+      return "past";
+    } else {
+      return "ongoing";
+    }
+  };
+
   return (
     <div className="">
       <Table>
@@ -36,32 +52,32 @@ export default function MeetingTable({ meetings }: { meetings: any[] }) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {meetings.map((meeting) => (
-            <TableRow key={meeting.id}>
+          {meetings.map((meeting: Meeting) => (
+            <TableRow key={meeting.meetingId}>
               <TableCell>
                 <Badge
                   variant={
-                    meeting.status === "upcoming"
+                    determineStatus(meeting) === "upcoming"
                       ? "outline"
-                      : meeting.status === "past"
+                      : determineStatus(meeting) === "past"
                         ? "secondary"
                         : "destructive"
                   }
                 >
-                  {meeting.status}
+                  {determineStatus(meeting)}
                 </Badge>
               </TableCell>
-              <TableCell className="font-medium">{meeting.type}</TableCell>
-              <TableCell>{meeting.client}</TableCell>
+              <TableCell className="font-medium">
+                {meeting.meetingType}
+              </TableCell>
+              <TableCell>{meeting.schedulingUserName}</TableCell>
               <TableCell className="hidden md:table-cell">
-                {meeting.date}
+                {format(parseISO(meeting.startTime), "MMM dd, yyyy")}
               </TableCell>
               <TableCell className="hidden md:table-cell">
-                {meeting.time}
+                {format(parseISO(meeting.startTime), "h:mm a")}
               </TableCell>
-              <TableCell className="hidden md:table-cell">
-                {meeting.duration}
-              </TableCell>
+              <TableCell className="hidden md:table-cell">{30}</TableCell>
               <TableCell>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
