@@ -11,10 +11,10 @@ export const AbounaDropdownItems: { label: string; icon: React.ReactNode }[] = [
     label: "Dashboard",
     icon: <Home />,
   },
-  {
-    label: "Availability",
-    icon: <Clock />,
-  },
+  // {
+  //   label: "Availability",
+  //   icon: <Clock />,
+  // },
   {
     label: "Settings",
     icon: <Settings />,

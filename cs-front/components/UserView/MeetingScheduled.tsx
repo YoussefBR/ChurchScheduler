@@ -18,7 +18,7 @@ export default function GenericMeetingScheduled({ onDismiss }: GenericMeetingSch
 
   const handleDismiss = () => {
     // Redirect to the home page
-    window.location.href = "http://localhost:3000/home";
+    window.location.href = "http://localhost:3000";
   }
 
   return (
