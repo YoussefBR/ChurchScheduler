@@ -19,14 +19,6 @@ export default function DashboardTable() {
   const { meetings, fetchMeetings } = useMeetingStore();
   const [allMeetings, setAllMeetings] = React.useState<Meeting[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await fetchMeetings();
-    };
-
-    fetchData();
-    setAllMeetings(meetings);
-  }, [fetchMeetings, meetings]);
 
   return (
     <div>
