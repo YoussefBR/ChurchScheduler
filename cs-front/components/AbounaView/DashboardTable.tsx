@@ -4,13 +4,11 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import MeetingTableHeader from "@/components/AbounaView/MeetingTableHeader";
 import MeetingTable from "@/components/AbounaView/MeetingTable";
-import { format } from "date-fns";
 
 import useMeetingStore, { Meeting } from "@/hooks/useMeeting";
 
@@ -50,23 +48,14 @@ type CustomCardContentProps = {
   meetings: Meeting[];
 };
 
-const CustomCardContent = ({
-  type,
-  date,
-  meetings,
-}: CustomCardContentProps) => {
-  const filteredMeetings = meetings.filter((meeting) => {
-    return true;
-  });
-
+const CustomCardContent = ({ date, meetings }: CustomCardContentProps) => {
   return (
     <>
       <Card>
         <CardHeaderContent date={date} />
         <CardContent>
-          <MeetingTable meetings={filteredMeetings} />
+          <MeetingTable meetings={meetings} />
         </CardContent>
-        <CardFooterContent length={filteredMeetings?.length} />
       </Card>
     </>
   );
@@ -77,25 +66,8 @@ const CardHeaderContent = (children: any) => {
     <>
       <CardHeader>
         <CardTitle>Scheduled Meetings</CardTitle>
-        <CardDescription>
-          {children.date
-            ? `Meetings for ${format(children.date, "MMMM d, yyyy")}`
-            : "Manage your upcoming and past meetings."}
-        </CardDescription>
+        <CardDescription>Your recent and upcoming meetings.</CardDescription>
       </CardHeader>
-    </>
-  );
-};
-
-const CardFooterContent = ({ length }: { length: number }) => {
-  return (
-    <>
-      <CardFooter>
-        <div className="text-xs text-muted-foreground">
-          Showing <strong>{0}</strong> of <strong>{length ? length : 0}</strong>{" "}
-          meetings
-        </div>
-      </CardFooter>
     </>
   );
 };

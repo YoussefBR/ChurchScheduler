@@ -1,25 +1,30 @@
-import React, { useEffect, useState } from "react";
+"use client";
+
+import { useState } from "react";
+import { format, parseISO } from "date-fns";
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import {
   Table,
-  TableRow,
-  TableHead,
   TableBody,
   TableCell,
+  TableHead,
   TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal } from "lucide-react";
-import { Meeting } from "@/hooks/useMeeting";
-import { format, parseISO } from "date-fns";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
 import {
   Select,
   SelectContent,
@@ -28,154 +33,192 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const ITEMS_PER_PAGE = 10;
+import { Meeting } from "@/hooks/useMeeting";
+import { allMeetings } from "@/constants/meetings";
 
-export default function MeetingTable({ meetings }: { meetings: any[] }) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+const determineStatus = (startTime: string) => {
+  const now = new Date();
+  const meetingTime = parseISO(startTime);
+  if (meetingTime < now) return "past";
+  if (
+    meetingTime > now &&
+    meetingTime.getTime() - now.getTime() <= 30 * 60 * 1000
+  )
+    return "now";
+  return "upcoming";
+};
 
-  const determineStatus = (date: Meeting) => {
-    const now = new Date();
-    const meetingStart = new Date(date.startTime);
-    const meetingEnd = new Date(date.endTime);
+export default function Component({ meetings }: { meetings: Meeting[] }) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
 
-    if (meetingStart > now) {
-      return "upcoming";
-    } else if (meetingStart < now && meetingEnd < now) {
-      return "past";
-    } else {
-      return "ongoing";
-    }
-  };
+  const columns: ColumnDef<Meeting>[] = [
+    {
+      accessorKey: "status",
+      header: "Status",
+      accessorFn: (row) => determineStatus(row.startTime),
+      cell: ({ row }) => {
+        const status = determineStatus(row.original.startTime);
+        return (
+          <Badge
+            variant={
+              status === "upcoming"
+                ? "outline"
+                : status === "past"
+                  ? "secondary"
+                  : "destructive"
+            }
+          >
+            {status}
+          </Badge>
+        );
+      },
+      filterFn: (row, columnId, filterValue) => {
+        const status = row.getValue(columnId);
+        return filterValue === "All" || status === filterValue;
+      },
+    },
+    {
+      accessorKey: "meetingType",
+      header: "Type",
+    },
+    {
+      accessorKey: "schedulingUserName",
+      header: "Parish Member",
+    },
+    {
+      accessorKey: "startTime",
+      header: "Date",
+      cell: ({ row }) =>
+        format(parseISO(row.original.startTime), "MMM dd, yyyy"),
+    },
+    {
+      accessorKey: "startTime",
+      header: "Time",
+      cell: ({ row }) => format(parseISO(row.original.startTime), "h:mm a"),
+    },
+    {
+      accessorKey: "duration",
+      header: "Duration",
+      cell: () => "30",
+    },
+  ];
 
-  const page = Number(searchParams.get("page")) || 1;
-  const status = searchParams.get("status") || "all";
-
-  const [filteredMeetings, setFilteredMeetings] = useState<Meeting[]>([]);
-
-  useEffect(() => {
-    const filtered = meetings.filter((meeting) => {
-      if (status === "all") return true;
-      return determineStatus(meeting) === status;
-    });
-    setFilteredMeetings(filtered);
-  }, [meetings, status]);
-
-  const totalPages =
-    filteredMeetings.length === 0
-      ? 1
-      : Math.ceil(filteredMeetings.length / ITEMS_PER_PAGE);
-  const paginatedMeetings = filteredMeetings.slice(
-    (page - 1) * ITEMS_PER_PAGE,
-    page * ITEMS_PER_PAGE
-  );
-
-  const handleStatusChange = (newStatus: string) => {
-    const params = new URLSearchParams(searchParams);
-    params.set("status", newStatus);
-    params.set("page", "1");
-    router.push(`${pathname}?${params.toString()}`);
-  };
-
-  const handlePageChange = (newPage: number) => {
-    const params = new URLSearchParams(searchParams);
-    params.set("page", newPage.toString());
-    router.push(`${pathname}?${params.toString()}`);
-  };
+  const table = useReactTable({
+    data: meetings,
+    columns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
+  });
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <Select value={status} onValueChange={handleStatusChange}>
+      <div className="flex items-center py-4">
+        <Select
+          value={
+            (table.getColumn("status")?.getFilterValue() as string) ?? "All"
+          }
+          onValueChange={(value) =>
+            table.getColumn("status")?.setFilterValue(value)
+          }
+        >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="All">All</SelectItem>
             <SelectItem value="past">Past</SelectItem>
             <SelectItem value="upcoming">Upcoming</SelectItem>
             <SelectItem value="now">Now</SelectItem>
           </SelectContent>
         </Select>
       </div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Status</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Parish Member</TableHead>
-            <TableHead className="hidden md:table-cell">Date</TableHead>
-            <TableHead className="hidden md:table-cell">Time</TableHead>
-            <TableHead className="hidden md:table-cell">Duration</TableHead>
-            <TableHead>
-              <span className="sr-only">Actions</span>
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {paginatedMeetings.map((meeting: Meeting) => (
-            <TableRow key={meeting.meetingId}>
-              <TableCell>
-                <Badge
-                  variant={
-                    determineStatus(meeting) === "upcoming"
-                      ? "outline"
-                      : determineStatus(meeting) === "past"
-                        ? "secondary"
-                        : "destructive"
-                  }
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
                 >
-                  {determineStatus(meeting)}
-                </Badge>
-              </TableCell>
-              <TableCell className="font-medium">
-                {meeting.meetingType}
-              </TableCell>
-              <TableCell>{meeting.schedulingUserName}</TableCell>
-              <TableCell className="hidden md:table-cell">
-                {format(parseISO(meeting.startTime), "MMM dd, yyyy")}
-              </TableCell>
-              <TableCell className="hidden md:table-cell">
-                {format(parseISO(meeting.startTime), "h:mm a")}
-              </TableCell>
-              <TableCell className="hidden md:table-cell">{30}</TableCell>
-              <TableCell>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button aria-haspopup="true" size="icon" variant="ghost">
-                      <MoreHorizontal className="h-4 w-4" />
-                      <span className="sr-only">Toggle menu</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                    <DropdownMenuItem>Reschedule</DropdownMenuItem>
-                    <DropdownMenuItem>Cancel</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <div className="flex justify-between items-center">
-        <Button
-          onClick={() => handlePageChange(page - 1)}
-          disabled={page === 1}
-        >
-          Previous
-        </Button>
-        <span className="text-sm">
-          Page {page} of {totalPages}
-        </span>
-        <Button
-          onClick={() => handlePageChange(page + 1)}
-          disabled={page === totalPages}
-        >
-          Next
-        </Button>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <div className="flex items-center justify-end space-x-2 py-4">
+        <div className="flex-1 text-sm text-muted-foreground">
+          {table.getFilteredRowModel().rows.length} meeting(s).
+        </div>
+        <div className="space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </div>
   );
