@@ -1,7 +1,8 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import Link from "next/link";
+'use client'
+
+import { Button } from "@/components/ui/button"
+import Image from "next/image"
+import Link from "next/link"
 
 export default function LandingPage() {
   return (
@@ -11,12 +12,14 @@ export default function LandingPage() {
           <span className="text-white text-xl font-bold">Meet Abouna</span>
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link
-            className="text-sm font-medium text-white hover:underline underline-offset-4"
-            href="#"
+          <Button
+            className="bg-background text-black hover:bg-slate-500"
+            onClick={() => {
+              window.location.href = "/sign-in"
+            }}
           >
-            Contact
-          </Link>
+            Abouna Sign In
+          </Button>
         </nav>
       </header>
       <main className="flex-1">
@@ -43,14 +46,6 @@ export default function LandingPage() {
                 <Button
                   className="bg-background text-black hover:bg-slate-500"
                   onClick={() => {
-                    window.location.href = "/sign-in";
-                  }}
-                >
-                  Sign In
-                </Button>
-                <Button
-                  className="bg-background text-black hover:bg-slate-500"
-                  onClick={() => {
                     window.location.href = "/home";
                   }}
                 >
@@ -62,5 +57,5 @@ export default function LandingPage() {
         </section>
       </main>
     </div>
-  );
+  )
 }

@@ -16,13 +16,13 @@ type MeetingTableHeaderProps = {
   setType: (type: string) => void;
   setMeetings: (
     meetings: {
-      id: number;
-      type: string;
-      client: string;
-      date: string;
-      time: string;
-      duration: string;
-      status: string;
+      meetingId: string;
+      meetingType: string;
+      abounaId: string;
+      schedulingUserName: string;
+      schedulingUserEmail: string;
+      startTime: string;
+      endTime: string;
     }[]
   ) => void;
 };
@@ -38,7 +38,7 @@ export default function MeetingTableHeader({
     if (selectedDate) {
       const formattedDate = format(selectedDate, "yyyy-MM-dd");
       const filteredMeetings = allMeetings.filter(
-        (meeting) => meeting.date === formattedDate
+        (meeting) => format(meeting.startTime, "yyyy-MM-dd") === formattedDate
       );
       setMeetings(filteredMeetings);
     } else {
@@ -49,24 +49,6 @@ export default function MeetingTableHeader({
   return (
     <div className="mb-4 mt-4">
       <div className="flex items-center">
-        <TabsList>
-          <TabsTrigger value="all" onClick={() => setType("all")}>
-            All
-          </TabsTrigger>
-          <TabsTrigger value="upcoming" onClick={() => setType("upcoming")}>
-            Upcoming
-          </TabsTrigger>
-          <TabsTrigger value="past" onClick={() => setType("past")}>
-            Past
-          </TabsTrigger>
-          <TabsTrigger
-            value="canceled"
-            onClick={() => setType("canceled")}
-            className="hidden sm:flex"
-          >
-            Canceled
-          </TabsTrigger>
-        </TabsList>
         <div className="ml-auto flex items-center gap-2">
           <Popover>
             <PopoverTrigger asChild>
@@ -84,22 +66,15 @@ export default function MeetingTableHeader({
             <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 mode="single"
+                disabled={{ before: new Date() }}
                 selected={date}
                 onSelect={(e) => {
-                  console.log(e);
                   handleDateSelect(e!);
                 }}
                 initialFocus
               />
             </PopoverContent>
           </Popover>
-
-          {/* <Button size="sm" className="h-8 gap-1">
-            <PlusCircle className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              New Meeting
-            </span>
-          </Button> */}
         </div>
       </div>
     </div>

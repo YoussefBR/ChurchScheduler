@@ -1,6 +1,5 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
 
 import {
@@ -17,17 +16,10 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import MeetingStore from "@/hooks/useMeeting";
+import { months } from "@/constants/months";
 
 export const description = "A bar chart with a label";
-
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-];
 
 const chartConfig = {
   desktop: {
@@ -37,8 +29,25 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function AbounaMonthlyBarChart() {
-  const begin = chartData[0].month;
-  const end = chartData[chartData.length - 1].month;
+  const begin = months[0];
+  const end = months[months.length - 1];
+  const { meetings } = MeetingStore();
+  const MonthMap = new Map();
+  for (const month of months) {
+    MonthMap.set(month, 0);
+  }
+
+  for (const meeting of meetings) {
+    const month = new Date(meeting.startTime).getMonth();
+    const monthName = months[month];
+    MonthMap.set(monthName, MonthMap.get(monthName) + 1);
+  }
+
+  const chartData = Array.from(MonthMap).map(([month, desktop]) => ({
+    month,
+    desktop,
+  }));
+
   return (
     <Card>
       <CardHeader>
@@ -78,11 +87,8 @@ export function AbounaMonthlyBarChart() {
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          Showing total visitors for the last year
         </div>
       </CardFooter>
     </Card>

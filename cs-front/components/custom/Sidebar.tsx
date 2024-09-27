@@ -13,14 +13,14 @@ const SidebarItems: {
   icon: React.ReactNode;
   label: string;
 }[] = [
-  {
-    icon: <Home className="h-5 w-5" />,
-    label: "Dashboard",
-  },
-  {
-    icon: <Clock className="h-5 w-5" />,
-    label: "Availability",
-  },
+  // {
+  //   icon: <Home className="h-5 w-5" />,
+  //   label: "Dashboard",
+  // },
+  // {
+  //   icon: <Clock className="h-5 w-5" />,
+  //   label: "Availability",
+  // },
 ];
 
 export default function Sidebar({ isAbouna }: { isAbouna: boolean }) {

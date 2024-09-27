@@ -13,30 +13,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { allMeetings } from "@/constants/meetings";
+import useMeetingStore from "@/hooks/useMeeting";
 import { format } from "date-fns";
 
 export const description =
   "A donut chart showing remaining meetings for the day";
-
-const chartData = [
-  {
-    type: "Calls",
-    count: allMeetings.filter((m) => {
-      return (
-        m.type === "Phone Call" && m.date === format(new Date(), "yyyy-MM-dd")
-      );
-    }).length,
-    fill: "hsl(var(--chart-1))",
-  },
-  {
-    type: "1-1",
-    count: allMeetings.filter((m) => {
-      return m.type === "1-1" && m.date === format(new Date(), "yyyy-MM-dd");
-    }).length,
-    fill: "hsl(var(--chart-6))",
-  },
-];
 
 const chartConfig = {
   count: {
@@ -72,9 +53,33 @@ const CustomTooltip = ({
 
 export function AbounaChart() {
   const formattedDate = format(new Date(), "yyyy-MM-dd");
-  const meetingCount = allMeetings.filter(
-    (m) => m.date === formattedDate
+  const { meetings } = useMeetingStore();
+  const meetingCount = meetings.filter(
+    (m) => format(m.startTime, "yyyy-MM-dd") === formattedDate
   ).length;
+
+  const chartData = [
+    {
+      type: "Calls",
+      count: meetings.filter((m) => {
+        return (
+          m.meetingType === "Phone Call" &&
+          format(m.startTime, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd")
+        );
+      }).length,
+      fill: "hsl(var(--chart-1))",
+    },
+    {
+      type: "1-1",
+      count: meetings.filter((m) => {
+        return (
+          m.meetingType === "In-Person" &&
+          format(m.startTime, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd")
+        );
+      }).length,
+      fill: "hsl(var(--chart-6))",
+    },
+  ];
 
   return (
     <Card className="flex flex-col max-h-[400px]">
@@ -135,9 +140,6 @@ export function AbounaChart() {
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col text-sm">
-        <div className="flex items-center gap-2 font-medium leading-none mb-3">
-          Next meeting in ... minutes <CalendarClock className="h-4 w-4" />
-        </div>
         <div className="leading-none text-muted-foreground">
           Showing remaining meetings for today
         </div>
