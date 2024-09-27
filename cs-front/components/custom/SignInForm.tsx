@@ -48,7 +48,7 @@ export default function SignInForm() {
         setSuccessMessage("Login successful!");
         // Handle successful login (e.g., redirect or store token)
         //useRouter().push('/home'); // Redirect to dashboard
-        window.location.href = "http://localhost:3000/home";
+        window.location.href = `http://localhost:3000/abouna-home`;
         console.log(data);
       } else {
         const errorData = await response.json();
