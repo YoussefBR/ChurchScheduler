@@ -42,11 +42,11 @@ export default function LandingPage() {
                   scheduling platform.
                 </p>
               </div>
-              <div className="flex justify-center w-full">
+              <div className="space-x-4">
                 <Button
                   className="bg-background text-black hover:bg-slate-500"
                   onClick={() => {
-                    window.location.href = "/home"
+                    window.location.href = "/home";
                   }}
                 >
                   Book an Appointment
