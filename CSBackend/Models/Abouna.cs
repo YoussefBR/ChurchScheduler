@@ -5,7 +5,7 @@ namespace CSBackend.Models
     public class Abouna
     {
 
-        [Required]
+        //[Required]
         public String AbounaId { get; set; }
 
         [Required]
@@ -20,13 +20,13 @@ namespace CSBackend.Models
         [Required]
         public String Password {get; set;}
 
-        [Required]
+        //[Required]
         public String PasswordSalt {get; set;}
 
         [Required]
         public String Email {get; set;}
 
-        [Required]
+        //[Required]
         public String Availability {get; set;}
 
         // Navigation property for the many-to-many relationship with Meeting
