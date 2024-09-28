@@ -8,8 +8,11 @@ import { AbounaDropdownItems } from "@/constants/AbounaDropdownItems";
 import DashboardTable from "./DashboardTable";
 import AbounaStats from "./AbounaStats";
 import QuickSchedule from "../custom/QuickSchedule";
+import useMeetingStore from "@/hooks/useMeeting";
 
 export function AbounaDashboard() {
+  const { meetings, fetchMeetings } = useMeetingStore();
+  console.log(meetings);
   return (
     <div className="flex min-h-screen w-full flex-col bg-background ">
       <div className="flex h-screen flex-col  sm:gap-4 sm:py-4 sm:pl-14 ">
